@@ -1,0 +1,46 @@
+{
+  "name": "blossombackendtest",
+  "version": "1.0.0",
+  "main": "dist/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node dist/app.js",
+    "dev": "nodemon src/app.ts",
+    "build": "tsc && tsc -p tsconfig.test.json",
+    "test": "jest",
+    "migrate": "npx sequelize-cli db:migrate",
+    "seed": "npx sequelize-cli db:seed:all"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Express TypeScript API",
+  "dependencies": {
+    "@types/node-cron": "^3.0.11",
+    "@types/redis": "^4.0.10",
+    "@types/swagger-ui-express": "^4.1.8",
+    "apollo-server-express": "^3.10.4",
+    "express": "^4.18.2",
+    "graphql": "^16.8.1",
+    "mysql2": "^3.6.5",
+    "node-cron": "^3.0.3",
+    "redis": "^4.6.11",
+    "reflect-metadata": "^0.2.2",
+    "sequelize": "^6.35.2",
+    "swagger-ui-express": "^5.0.0",
+    "dotenv": "^16.4.1",
+    "node-fetch": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.19",
+    "@types/node-fetch": "^2.6.11",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.3",
+    "sequelize-cli": "^6.6.2",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
