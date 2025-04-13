@@ -1,8 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../../config/database';
 
-class Character extends Model {
-  public id!: number;
+export class CharacterModel extends Model {
+  public id!: string;
+  public rickAndMortyId!: number;
   public name!: string;
   public status!: string;
   public species!: string;
@@ -13,67 +14,73 @@ class Character extends Model {
   public image!: string;
   public episode!: string[];
   public url!: string;
-  public created!: Date;
+  public created!: string;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
 }
 
-Character.init(
+CharacterModel.init(
   {
     id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
+    rickAndMortyId: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
+      allowNull: false,
+      unique: true
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     status: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     species: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     type: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: true
     },
     gender: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     origin: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     location: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     image: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     episode: {
       type: DataTypes.JSON,
-      allowNull: false,
+      allowNull: false
     },
     url: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     created: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
+      type: DataTypes.STRING,
+      allowNull: true
+    }
   },
   {
     sequelize,
-    modelName: 'Character',
     tableName: 'characters',
-    timestamps: false,
+    modelName: 'Character'
   }
 );
 
-export default Character; 
+export default CharacterModel; 

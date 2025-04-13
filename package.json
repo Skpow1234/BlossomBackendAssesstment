@@ -1,46 +1,92 @@
 {
   "name": "blossombackendtest",
   "version": "1.0.0",
+  "description": "Rick and Morty Character API",
   "main": "dist/app.js",
-  "type": "module",
   "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
+    "build": "tsc",
+    "build:test": "tsc && tsc -p tsconfig.test.json",
     "start": "node dist/app.js",
-    "dev": "nodemon src/app.ts",
-    "build": "tsc && tsc -p tsconfig.test.json",
     "test": "jest",
+    "test:watch": "jest --watch",
     "migrate": "npx sequelize-cli db:migrate",
-    "seed": "npx sequelize-cli db:seed:all"
+    "seed": "npx sequelize-cli db:seed:all",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "Express TypeScript API",
   "dependencies": {
-    "@types/node-cron": "^3.0.11",
-    "@types/redis": "^4.0.10",
-    "@types/swagger-ui-express": "^4.1.8",
-    "apollo-server-express": "^3.10.4",
-    "express": "^4.18.2",
+    "@apollo/server": "^4.10.0",
+    "apollo-server-express": "^3.12.1",
+    "axios": "^1.6.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
     "graphql": "^16.8.1",
-    "mysql2": "^3.6.5",
+    "graphql-subscriptions": "^2.0.0",
+    "ioredis": "^5.3.2",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.9.2",
     "node-cron": "^3.0.3",
+    "node-fetch": "^2.7.0",
     "redis": "^4.6.11",
     "reflect-metadata": "^0.2.2",
-    "sequelize": "^6.35.2",
+    "sequelize": "^6.37.1",
+    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
-    "dotenv": "^16.4.1",
-    "node-fetch": "^2.7.0"
+    "winston": "^3.11.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
-    "@types/node": "^20.11.19",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^20.17.30",
+    "@types/node-cron": "^3.0.11",
     "@types/node-fetch": "^2.6.11",
+    "@types/redis": "^4.0.10",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.6",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/parser": "^7.1.1",
+    "cron": "^3.1.6",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
     "jest": "^29.7.0",
-    "nodemon": "^3.0.3",
+    "prettier": "^3.2.5",
     "sequelize-cli": "^6.6.2",
     "ts-jest": "^29.1.2",
-    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/__tests__/**/*.ts",
+      "**/?(*.)+(spec|test).ts"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json",
+      "node"
+    ],
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "^@domain/(.*)$": "<rootDir>/src/domain/$1",
+      "^@repositories/(.*)$": "<rootDir>/src/domain/repositories/$1",
+      "^@infrastructure/(.*)$": "<rootDir>/src/infrastructure/$1",
+      "^@application/(.*)$": "<rootDir>/src/application/$1"
+    }
   }
 }

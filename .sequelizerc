@@ -5,7 +5,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default {
-  'config': path.resolve(__dirname, 'src/config', 'database.js'),
+  'config': path.resolve(__dirname, 'src/config', 'database.ts'),
   'models-path': path.resolve(__dirname, 'src', 'models'),
   'seeders-path': path.resolve(__dirname, 'src', 'seeders'),
   'migrations-path': path.resolve(__dirname, 'src', 'migrations')

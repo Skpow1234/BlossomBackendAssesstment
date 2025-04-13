@@ -1,41 +1,55 @@
-import { CronJob } from 'cron';
-import { CharacterService } from '../services/character/CharacterService';
+import { ICharacterRepository } from '../../infrastructure/repositories/CharacterRepository';
 import { RickAndMortyAPI } from '../../infrastructure/external/RickAndMortyAPI';
+import { Logger } from '../../infrastructure/utils/Logger';
 
 export class CharacterSyncJob {
-  private job: CronJob;
-  private characterService: CharacterService;
+  private characterRepository: ICharacterRepository;
   private rickAndMortyAPI: RickAndMortyAPI;
+  private logger: Logger;
 
-  constructor(characterService: CharacterService, rickAndMortyAPI: RickAndMortyAPI) {
-    this.characterService = characterService;
+  constructor(characterRepository: ICharacterRepository, rickAndMortyAPI: RickAndMortyAPI) {
+    this.characterRepository = characterRepository;
     this.rickAndMortyAPI = rickAndMortyAPI;
-    this.job = new CronJob('0 */12 * * *', this.syncCharacters.bind(this));
+    this.logger = new Logger('CharacterSyncJob');
   }
 
-  public start(): void {
-    this.job.start();
-    console.log('Character sync job started');
-  }
-
-  public stop(): void {
-    this.job.stop();
-    console.log('Character sync job stopped');
-  }
-
-  @Timing
-  private async syncCharacters(): Promise<void> {
+  async run(): Promise<void> {
     try {
-      console.log('Starting character synchronization...');
-      const characters = await this.rickAndMortyAPI.getCharacters();
+      this.logger.info('Running character sync job');
+      
+      const characters = await this.rickAndMortyAPI.getAllCharacters();
       
       for (const character of characters) {
-        await this.characterService.syncCharacter(character);
+        try {
+          if (character.rickAndMortyId) {
+            const existingCharacter = await this.characterRepository.findByRickAndMortyId(character.rickAndMortyId);
+            
+            if (!existingCharacter) {
+              await this.characterRepository.create({
+                rickAndMortyId: character.rickAndMortyId,
+                name: character.name,
+                status: character.status,
+                species: character.species,
+                type: character.type,
+                gender: character.gender,
+                origin: typeof character.origin === 'object' ? character.origin.name : character.origin,
+                location: typeof character.location === 'object' ? character.location.name : character.location,
+                image: character.image,
+                episode: character.episode,
+                url: character.url
+              });
+              
+              this.logger.info(`Character ${character.name} synced successfully`);
+            }
+          }
+        } catch (error) {
+          this.logger.error(`Error syncing character ${character.name}`, error);
+        }
       }
-
-      console.log('Character synchronization completed successfully');
+      
+      this.logger.info('Character sync job completed');
     } catch (error) {
-      console.error('Error during character synchronization:', error);
+      this.logger.error('Error running character sync job', error);
     }
   }
 } 

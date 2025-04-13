@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { CharacterService } from '../../../../domain/services/character/CharacterService';
+import { Router, Request, Response } from 'express';
+import { CharacterService } from '../../../../../domain/services/character/CharacterServiceImpl';
 
 /**
  * @swagger
@@ -18,7 +18,7 @@ export class CharacterController {
     this.initializeRoutes();
   }
 
-  private initializeRoutes() {
+  private initializeRoutes(): void {
     /**
      * @swagger
      * /api/v1/characters:
@@ -35,14 +35,7 @@ export class CharacterController {
      *               items:
      *                 $ref: '#/components/schemas/Character'
      */
-    this.router.get('/', async (req, res) => {
-      try {
-        const characters = await this.characterService.getAllCharacters();
-        res.json(characters);
-      } catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    });
+    this.router.get('/', this.searchCharacters.bind(this));
 
     /**
      * @swagger
@@ -66,19 +59,32 @@ export class CharacterController {
      *       404:
      *         description: Character not found
      */
-    this.router.get('/:id', async (req, res) => {
-      try {
-        const character = await this.characterService.getCharacterById(req.params.id);
-        if (!character) {
-          return res.status(404).json({ error: 'Character not found' });
-        }
-        res.json(character);
-      } catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    });
+    this.router.get('/:id', this.getCharacterById.bind(this));
 
     // Add other routes with Swagger documentation here
+  }
+
+  private async searchCharacters(req: Request, res: Response): Promise<void> {
+    try {
+      const query = req.query.query ? String(req.query.query) : '';
+      const characters = await this.characterService.searchCharacters(query);
+      res.json(characters);
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  private async getCharacterById(req: Request, res: Response): Promise<void> {
+    try {
+      const character = await this.characterService.getCharacterById(req.params.id);
+      if (!character) {
+        res.status(404).json({ error: 'Character not found' });
+        return;
+      }
+      res.json(character);
+    } catch (error) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
   }
 
   public getRouter(): Router {
